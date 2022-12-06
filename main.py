@@ -1,49 +1,56 @@
-
-# https://betterprogramming.pub/designing-beautiful-command-line-applications-with-python-72bd2f972ea
-
-from CredentialManager import CredentialManager
-
 import click
 
-cm = None
 
+from checker import check_credentials
+from service import download_picture, proccess_image
+
+# API descriptor Stripe
+# https://www.postman.com/stripedev/workspace/stripe-developers/request/665823-8380209d-f228-4f74-bb79-ee811ee37033
 
 @click.group()
 def app():
     """Product generator for stripe, made by sylvain for lotby"""
 
 
+@app.command(name="create-product")
+@click.option("--name", prompt="Name", required=True)
+@click.option("--description", prompt="Description", required=True)
+@click.option("--image_url", prompt="Url image", required=True)
+@click.option("--shippable", prompt="Shippable", default=True, required=True)
+@click.option("--statement_descriptor", prompt="Name on bank statement", required=True)
+@click.option("--remove_image_background", prompt="Remove image background",default=True, required=True)
 
-@app.command()
-@click.option("--count", default=1, help="How much love you want")
-@click.argument("name")
-def spread(name, count):
-    """Spread the love."""
+def create_product_stripe(name, description, image_url, shippable, statement_descriptor, remove_image_background):
     
-    print(cm)
-    cm.print_credentials()
+    try:
+        # https://stripe.com/docs/tax/tax-categories
+        tax_code = "txcd_99999999"
+        unit_label = name
+        stripe = check_credentials()
+        download_picture(image_url)
+        if remove_image_background:
+            proccess_image()
+        
+        product = stripe.Product.create(
+            name=name,
+            description=description,
+            images=[image_url],
+        )
+
+        
+
+        
+        
+    except Exception as e :
+        print(e)
+
     
-    for i in range(count):
-        print(f"{name} loves you ❤️")
+    
 
 
-@app.command(name="print")
-@click.argument("filepath", metavar="FILE", type=click.Path(exists=True))
-@click.option("--show-meta", default=False, is_flag=True)
-def print_(filepath, show_meta):
-    """Print the file."""
-    if show_meta:
-        print(f"File path: {filepath}")
-        print("-" * 80)
-    with open(filepath, "r") as f:
-        print(f.read())
+
 
 
 if __name__ == "__main__":
-
-    stripe_pk = click.prompt('Stripe public key', type=str)
-    stripe_sk = click.prompt('Stripe secret key', type=str)
-    
-    cm = CredentialManager(stripe_pk, stripe_sk)
-    
     app()
+
