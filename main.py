@@ -14,9 +14,6 @@ def app():
 
 
 
-
-
-
 @app.command()
 @click.option("--count", default=1, help="How much love you want")
 @click.argument("name")
