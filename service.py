@@ -1,6 +1,8 @@
 import urllib.request
 from rembg import remove
+
 import logging
+logging.basicConfig(level = logging.INFO)
 
 PICUTRE_PATH_SRC = "./dist/tmp.jpg"
 PICTURE_PATH_DST = "./dist/tmp-no-bg.jpg"
@@ -18,11 +20,3 @@ def proccess_image():
             output = remove(t)
             o.write(output)
     logging.info("Background removed")
-
-def hosting_image():
-    # https://freeimage.host/page/api
-    logging.info(f"Upload image to host ...")
-
-
-download_picture("https://upload.wikimedia.org/wikipedia/commons/a/ab/USDA_Mineral_Quartz_Crystal_93c3951.jpg")
-proccess_image()
