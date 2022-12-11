@@ -4,4 +4,10 @@ class User(object):
     Args:
         object (_type_): _description_
     """
-    pass
+    
+    
+    def __init__(self, email, ticket_id):
+        self.email = email
+        self.ticket_id = ticket_id
+        
+        
