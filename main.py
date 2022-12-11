@@ -156,6 +156,9 @@ def delete_product_stripe(product_id):
             ctx = "prod"
         logging.info(f"Context stripe : {ctx}")
         
+        # TODO => make price not active instead of deleting it
+        # then delete it from panel ... # https://github.com/stripe/stripe-python/issues/658
+        
         # ticket = stripe.Product.retrieve(product_id)
         # ticket_price = stripe.Price.list(product=product_id).data
         
