@@ -1,6 +1,6 @@
 import logging
 logging.basicConfig(level = logging.INFO)
-
+from pymongo import MongoClient
 
 import click
 import pathlib
@@ -79,5 +79,7 @@ def create_product_stripe(name, description, image_url, shippable, statement_des
 
    
 if __name__ == "__main__":
+    
+    dbClient = MongoClient()
     app()
 
