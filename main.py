@@ -146,19 +146,35 @@ def delete_product_stripe():
 def delete_product_stripe(product_id):
     """ Remove product from stripe and database ( ticket and price associated in stripe and remove the product reference in database )
     """
-    stripe = check_credentials()
+    try:
+        stripe = check_credentials()
     
-    ctx = ""
-    if "_test_" in stripe.api_key:
-        ctx = "test"
-    else:
-        ctx = "prod"
-    logging.info(f"Context stripe : {ctx}")
-    
-    pprint(stripe.Product.retrieve(product_id))
-    pprint(stripe.Price.list(product=product_id))
-    
-    pprint(product_id)
+        ctx = ""
+        if "_test_" in stripe.api_key:
+            ctx = "test"
+        else:
+            ctx = "prod"
+        logging.info(f"Context stripe : {ctx}")
+        
+        # ticket = stripe.Product.retrieve(product_id)
+        # ticket_price = stripe.Price.list(product=product_id).data
+        
+        # Can't delete a price !
+        
+        # for price in ticket_price:
+        #     stripe.Price.delete(price.id)
+        #     logging.info(f"Price {price.id} deleted")
+            
+        stripe.Product.delete(product_id)
+        logging.info(f"Ticket {product_id} deleted")
+        
+        dbClient["products"].delete_one({"ticket_id": product_id})
+        logging.info(f"Product {product_id} deleted from database")
+        
+        logging.info(f"You can delete the associated price : {generate_url_for_env(env=ctx)}/prices")
+        
+    except Exception as e:
+        print(e)
 
 
    
