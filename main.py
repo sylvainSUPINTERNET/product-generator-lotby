@@ -21,18 +21,17 @@ def app():
 @click.option("--description", prompt="Description", required=True)
 @click.option("--image_url", prompt="Url image", required=True)
 @click.option("--shippable", prompt="Shippable", default=True, required=True)
-@click.option("--statement_descriptor", prompt="Name on bank statement", required=True)
+@click.option("--statement_descriptor (5chars) ", prompt="Name on bank statement", required=True, )
 @click.option("--remove_image_background", prompt="Remove image background",default=True, required=True)
 @click.option("--unit_amount_decimal", prompt="Montant decimal", required=True)
 @click.option("--currency", prompt="Currency (https://www.iso.org/iso-4217-currency-codes.html)", default="eur", required=True)
-
-def create_product_stripe(name, description, image_url, shippable, statement_descriptor, remove_image_background, unit_amount_decimal, currency):
+@click.option("--tax_code", prompt="tax code (https://stripe.com/docs/tax/tax-categories)", default="txcd_99999999", required=True)
+def create_product_stripe(name, description, image_url, shippable, statement_descriptor, remove_image_background, unit_amount_decimal, currency, tax_code):
 
     try:
         PIC_NO_BG_NAME="tmp-no-bg.jpg"
-        
-        # https://stripe.com/docs/tax/tax-categories
-        tax_code = "txcd_99999999"
+        PIC_NO_BG_NAME_WITH_TICKET="tmp-no-bg-ticket.jpg"
+
         unit_label = name
         
         stripe = check_credentials()
@@ -72,11 +71,8 @@ def create_product_stripe(name, description, image_url, shippable, statement_des
         
         
         logging.info(f"You can find it here : {generate_url_for_env(env=ctx)}/products")
-        logging.info(f" > Don't forget to add image ( no background ) on stripe dashboard: {pathlib.Path(__file__).parent.resolve()}\dis\{PIC_NO_BG_NAME}")
-        
-        
-        
-        
+        logging.info(f" > Don't forget to add image ( no background ) on stripe dashboard: {pathlib.Path(__file__).parent.resolve()}\dist\{PIC_NO_BG_NAME}")
+        logging.info(f" > Don't forget to add image product ( with ticket ) ( no background ) on stripe dashboard: {pathlib.Path(__file__).parent.resolve()}\dist\{PIC_NO_BG_NAME_WITH_TICKET}")
 
     except Exception as e :
         print(e)
