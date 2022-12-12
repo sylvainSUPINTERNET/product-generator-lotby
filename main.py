@@ -178,6 +178,11 @@ def delete_product_stripe(product_id):
         print(e)
 
 
+# TODO => generate it with the product generated
+# https://medium.com/yudiz-solutions/dynamic-task-scheduling-with-nodejs-and-mongodb-43052fdd811f
+# Create timer scheduler programaticaly with mongodb=
+# using cli https://www.mongodb.com/docs/atlas/app-services/triggers/scheduled-triggers/
+
    
 if __name__ == "__main__":
     try:
