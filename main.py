@@ -156,25 +156,23 @@ def delete_product_stripe(product_id):
             ctx = "prod"
         logging.info(f"Context stripe : {ctx}")
         
-        # TODO => make price not active instead of deleting it
-        # then delete it from panel ... # https://github.com/stripe/stripe-python/issues/658
         
-        # ticket = stripe.Product.retrieve(product_id)
-        # ticket_price = stripe.Price.list(product=product_id).data
+        prices_list = stripe.Price.list(product=product_id)
+        ticket = stripe.Product.retrieve(product_id)
         
-        # Can't delete a price !
-        
-        # for price in ticket_price:
-        #     stripe.Price.delete(price.id)
-        #     logging.info(f"Price {price.id} deleted")
-            
-        stripe.Product.delete(product_id)
-        logging.info(f"Ticket {product_id} deleted")
-        
+        price_to_disable_id = [ price.id  for price in prices_list.data if price["product"] == ticket.id ][0]
+    
+        # can't delete with API a price ! ( must disable it and remove it manually !)
+        stripe.Price.modify(price_to_disable_id, active=False,)
+        stripe.Product.modify(product_id, active=False,)
+
+
         dbClient["products"].delete_one({"ticket_id": product_id})
-        logging.info(f"Product {product_id} deleted from database")
+        logging.info(f"Product deleted from database")
         
-        logging.info(f"You can delete the associated price : {generate_url_for_env(env=ctx)}/prices")
+        
+        logging.info(f"Product {product_id} archived, please remove it from dashboard ! {generate_url_for_env(env=ctx)}/products")
+        logging.info(f"Price {price_to_disable_id} archived, please remove it from dashboard ! {generate_url_for_env(env=ctx)}/prices")
         
     except Exception as e:
         print(e)
