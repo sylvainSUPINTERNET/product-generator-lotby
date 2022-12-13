@@ -1,6 +1,6 @@
 # How to use
 
-```` bash
+```` powershell
 
 # install dep
 pip install -r requirements.txt
@@ -11,5 +11,18 @@ $env:PK_STRIPE=""
 
 # rename .env.dist into .env then use your mongoDB connection string
 # create table lotby
+
+````
+
+
+```` powershell
+npm install -g mongodb-realm-cli
+
+# Create cron task mongoDB
+
+# https://www.mongodb.com/docs/atlas/app-services/cli/
+
+$env:MONGO_CLI_PUBLIC_KEY="PK"
+$env:MONGO_CLI_PRIVATE_KEY="PK"
 
 ````
