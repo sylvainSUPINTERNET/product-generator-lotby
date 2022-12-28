@@ -38,7 +38,7 @@ def app():
 @click.option("--shippable", prompt="Shippable", default=True, required=True)
 @click.option("--statement_descriptor", prompt="Name on bank statement (5chars)", required=True, )
 @click.option("--remove_image_background", prompt="Remove image background",default=True, required=True)
-@click.option("--unit_amount_decimal", prompt="Montant decimal (entry ticket price)", required=True)
+@click.option("--unit_amount_decimal", prompt="Montant decimal (entry ticket price) e.g 2000 means 20.00", required=True)
 @click.option("--currency", prompt="Currency (https://www.iso.org/iso-4217-currency-codes.html)", default="eur", required=True)
 @click.option("--tax_code", prompt="tax code (https://stripe.com/docs/tax/tax-categories)", default="txcd_99999999", required=True)
 @click.option("--total_product_price", prompt="Product price total", required=True)
@@ -84,7 +84,7 @@ def create_product_stripe(name, description, image_url, shippable, statement_des
         )
         
         logging.info(f"Product created : {product.id}")
-
+        
         price = stripe.Price.create(
             product=product.id,
             unit_amount_decimal=unit_amount_decimal,
