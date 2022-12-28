@@ -68,6 +68,8 @@ def create_product_stripe(name, description, image_url, shippable, statement_des
         if remove_image_background:
             proccess_image()
 
+        end_date = datetime.now() + timedelta(days=int(days_before_game_end_at))
+        
         
         # this is the ticket
         product = stripe.Product.create(
@@ -77,7 +79,8 @@ def create_product_stripe(name, description, image_url, shippable, statement_des
             shippable=shippable,
             statement_descriptor=statement_descriptor,
             tax_code=tax_code,
-            unit_label=unit_label
+            unit_label=unit_label,
+            metadata={"endAt":end_date.isoformat()}
         )
         
         logging.info(f"Product created : {product.id}")
@@ -94,9 +97,7 @@ def create_product_stripe(name, description, image_url, shippable, statement_des
         logging.info(f" > Don't forget to add image product ( with ticket ) ( no background ) on stripe dashboard: {pathlib.Path(__file__).parent.resolve()}\dist\{PIC_NO_BG_NAME_WITH_TICKET}")
         
         
-        logging.info("Saving product in database ...")
-        end_date = datetime.now() + timedelta(days=int(days_before_game_end_at))
-        
+        logging.info("Saving product in database ...")        
         product_db = Product(name=name, ticket_id=product.id , ticket_price_id=price.id, price=total_product_price, end_at=end_date.isoformat())
         pid = dbClient["products"].insert_one(product_db.__dict__).inserted_id
         logging.info(f"Product saved in database : {pid}")
@@ -182,6 +183,8 @@ def delete_product_stripe(product_id):
 # https://medium.com/yudiz-solutions/dynamic-task-scheduling-with-nodejs-and-mongodb-43052fdd811f
 # Create timer scheduler programaticaly with mongodb=
 # using cli https://www.mongodb.com/docs/atlas/app-services/triggers/scheduled-triggers/
+
+
 
    
 if __name__ == "__main__":
