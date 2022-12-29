@@ -75,7 +75,7 @@ def create_product_stripe(name, description, image_url, shippable, statement_des
         product = stripe.Product.create(
             name=name,
             description=description,
-            images=[f"./dist/{PIC_NO_BG_NAME}"], # Is not uploading for some reason, do it manually after generation on stripe dashboard ...
+            images=[f"/dist/{PIC_NO_BG_NAME}"], # Is not uploading for some reason, do it manually after generation on stripe dashboard ...
             shippable=shippable,
             statement_descriptor=statement_descriptor,
             tax_code=tax_code,
