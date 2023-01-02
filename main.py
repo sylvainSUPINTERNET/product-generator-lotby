@@ -43,7 +43,8 @@ def app():
 @click.option("--tax_code", prompt="tax code (https://stripe.com/docs/tax/tax-categories)", default="txcd_99999999", required=True)
 @click.option("--total_product_price", prompt="Product price total", required=True)
 @click.option("--days_before_game_end_at", prompt="Number of day from today", default=5, required=True)
-def create_product_stripe(name, description, image_url, shippable, statement_descriptor, remove_image_background, unit_amount_decimal, currency, tax_code, total_product_price, days_before_game_end_at):
+@click.option("--max_slot", prompt="Max participants allowed", default=1, required=True)
+def create_product_stripe(name, description, image_url, shippable, statement_descriptor, remove_image_background, unit_amount_decimal, currency, tax_code, total_product_price, days_before_game_end_at, max_slot):
     
     """ Create product and associated price in stripe ( ticket & price ) and also reference in database. Will also generate a picture ready to be used in dashbaord ( ticket or product or product+ticket)
     
@@ -80,7 +81,10 @@ def create_product_stripe(name, description, image_url, shippable, statement_des
             statement_descriptor=statement_descriptor,
             tax_code=tax_code,
             unit_label=unit_label,
-            metadata={"endAt":end_date.isoformat()}
+            metadata={
+                "endAt":end_date.isoformat(),
+                "maxSlot":max_slot
+                }
         )
         
         logging.info(f"Product created : {product.id}")
