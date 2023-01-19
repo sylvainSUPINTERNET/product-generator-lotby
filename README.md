@@ -12,6 +12,8 @@ $env:PK_STRIPE=""
 # rename .env.dist into .env then use your mongoDB connection string
 # create table lotby
 
+# Need to add picture by yourself to stripe dashboard
+
 ````
 
 
